@@ -23,12 +23,22 @@ public class EmployeeController {
     }
 
     @GetMapping("/id/{id}")
-    public EmployeeDTO getEmployeeById(@PathVariable long id) {
+    public EmployeeDTO getEmployeeById(@PathVariable Long id) {
         return employeeService.getEmployeeById(id);
     }
 
     @PostMapping("/createEmployee")
     public EmployeeDTO addEmployee(@RequestBody EmployeeDTO employeeDTO) throws Exception {
         return employeeService.addEmployee(employeeDTO);
+    }
+
+    @PutMapping("/updateEmployee/{employeeId}")
+    public EmployeeDTO updateEmployee(@PathVariable Long employeeId, @RequestBody EmployeeDTO employeeDTO) throws Exception {
+        return employeeService.updateEmployeeById(employeeId, employeeDTO);
+    }
+
+    @DeleteMapping("/deleteEmployee/{employeeId}")
+    public EmployeeDTO deleteEmployee(@PathVariable Long employeeId) {
+        return employeeService.deleteEmployeeById(employeeId);
     }
 }

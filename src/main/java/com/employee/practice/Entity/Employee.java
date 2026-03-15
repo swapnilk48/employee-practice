@@ -20,7 +20,8 @@ import java.util.UUID;
 public class Employee {
 
     @Id
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String firstName;
 

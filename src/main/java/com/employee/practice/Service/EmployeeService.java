@@ -17,7 +17,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final ModelMapper modelMapper;
 
-    EmployeeService (EmployeeRepository employeeRepository, ModelMapper modelMapper) {
+    EmployeeService(EmployeeRepository employeeRepository, ModelMapper modelMapper) {
         this.employeeRepository = employeeRepository;
         this.modelMapper = modelMapper;
     }
@@ -39,8 +39,24 @@ public class EmployeeService {
         return newEmployee;
     }
 
-    public EmployeeDTO getEmployeeById(long id) {
+    public EmployeeDTO getEmployeeById(Long id) {
         Employee employee = employeeRepository.findById(id).orElse(null);
         return modelMapper.map(employee, EmployeeDTO.class);
+    }
+
+    public EmployeeDTO updateEmployeeById(Long employeeId, EmployeeDTO employeeDTO) {
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new RuntimeException("Employee not found"));
+        employeeDTO.setId(employeeId);
+        modelMapper.map(employeeDTO, employee);
+
+        Employee updatedEmployee = employeeRepository.save(employee);
+        return modelMapper.map(updatedEmployee, EmployeeDTO.class);
+    }
+
+    public EmployeeDTO deleteEmployeeById(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new RuntimeException("Employee not found"));
+        EmployeeDTO employeeDTO = modelMapper.map(employee, EmployeeDTO.class);
+        employeeRepository.delete(employee);
+        return employeeDTO;
     }
 }

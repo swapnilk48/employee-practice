@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class EmployeeDTO {
-    private long id;
+    private Long id;
 
     private String firstName;
 
