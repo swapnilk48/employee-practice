@@ -1,6 +1,9 @@
 package com.employee.practice.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +11,7 @@ import lombok.Setter;
 import org.hibernate.annotations.AnyDiscriminatorImplicitValues;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -27,5 +31,17 @@ public class Employee {
 
     private String lastName;
 
+    private Integer age;
+
     private String email;
+
+    private String role;
+
+    private Double salary;
+
+    private LocalDate dateOfBirth;
+
+    private LocalDate dateOfJoining;
+
+    private Boolean active;
 }
