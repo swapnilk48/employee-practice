@@ -2,6 +2,7 @@ package com.employee.practice.Controller;
 
 import com.employee.practice.DTO.EmployeeDTO;
 import com.employee.practice.Entity.Employee;
+import com.employee.practice.Exception.ResourceNotFoundException;
 import com.employee.practice.Service.EmployeeService;
 import jakarta.validation.Valid;
 import org.apache.coyote.Response;
@@ -9,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/employees")
@@ -30,11 +28,11 @@ public class EmployeeController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable @Valid Long id) {
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id) {
         Optional<EmployeeDTO> employeeDTO = employeeService.getEmployeeById(id);
         return employeeDTO
                 .map(employeeDTO1 -> ResponseEntity.ok().body(employeeDTO1))
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id " + id));
     }
 
     @PostMapping("/createEmployee")

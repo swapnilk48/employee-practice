@@ -1,0 +1,58 @@
+package com.employee.practice.Advice;
+
+import com.employee.practice.DTO.EmployeeDTO;
+import com.employee.practice.Exception.ResourceNotFoundException;
+import org.modelmapper.ValidationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler extends RuntimeException{
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiError> handleNoSuchElementException(ResourceNotFoundException e){
+        ApiError apiError = ApiError.builder()
+                .code(HttpStatus.NOT_FOUND.value())
+                .status(HttpStatus.NOT_FOUND)
+                .message(e.getMessage())
+                .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
+        List<String> errors = e
+                .getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(error -> error.getDefaultMessage())
+                .toList();
+        ApiError apiError = ApiError.builder()
+                .code(HttpStatus.BAD_REQUEST.value())
+                .status(HttpStatus.BAD_REQUEST)
+                .message(errors.toString())
+                .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleGenericException(Exception e){
+        ApiError apiError = ApiError.builder()
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .message(e.getMessage())
+                .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+}

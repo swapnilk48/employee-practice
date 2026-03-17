@@ -2,6 +2,7 @@ package com.employee.practice.Service;
 
 import com.employee.practice.DTO.EmployeeDTO;
 import com.employee.practice.Entity.Employee;
+import com.employee.practice.Exception.ResourceNotFoundException;
 import com.employee.practice.Repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.util.ReflectionUtils;
@@ -53,7 +54,7 @@ public class EmployeeService {
     }
 
     public EmployeeDTO updateEmployeeById(Long employeeId, EmployeeDTO employeeDTO) {
-        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new RuntimeException("Employee not found"));
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
         employeeDTO.setId(employeeId);
         modelMapper.map(employeeDTO, employee);
 
@@ -63,11 +64,11 @@ public class EmployeeService {
 
     public Boolean deleteEmployeeById(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).orElse(null);
-        if(employee != null) {
-            employeeRepository.delete(employee);
-            return true;
+        if(employee == null) {
+            throw new ResourceNotFoundException("Employee not found");
         }
-        return false;
+        employeeRepository.delete(employee);
+        return true;
     }
 
     public boolean checkEmployeeExist(Long employeeId) {
@@ -77,7 +78,7 @@ public class EmployeeService {
     public EmployeeDTO updateEmployeePartially(Long employeeId, Map<String, Object> updates) {
         boolean isExist = employeeRepository.existsById(employeeId);
         if (!isExist){
-            return null;
+            throw new ResourceNotFoundException("Employee not found");
         }
 
         Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new RuntimeException("Employee not found"));
