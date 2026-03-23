@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.AnyDiscriminatorImplicitValues;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.time.LocalDate;
@@ -42,6 +43,8 @@ public class Employee {
     private LocalDate dateOfBirth;
 
     private LocalDate dateOfJoining;
+
+    private String LinkedInURL;
 
     private Boolean active;
 }

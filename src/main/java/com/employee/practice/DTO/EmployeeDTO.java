@@ -4,6 +4,7 @@ package com.employee.practice.DTO;
 import com.employee.practice.annotations.RoleValidationAnnotation;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -42,6 +43,9 @@ public class EmployeeDTO {
 
     @PastOrPresent(message = "Enter a date in past or present")
     private LocalDate dateOfJoining;
+
+    @URL(message = "Not a valid URL.")
+    private String LinkedInURL;
 
     private Boolean active;
 }
