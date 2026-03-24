@@ -2,14 +2,18 @@ package com.employee.practice.Advice;
 
 import com.employee.practice.DTO.EmployeeDTO;
 import com.employee.practice.Exception.ResourceNotFoundException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ValidationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -43,6 +47,36 @@ public class GlobalExceptionHandler extends RuntimeException{
 
         return buildErrorResponse(apiError);
 
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<?>> handleDataIntegrity(DataIntegrityViolationException ex) {
+
+        String message = "Duplicate value";
+
+        Throwable cause = ex.getCause();
+
+        if (cause instanceof ConstraintViolationException cve) {
+            String constraint = cve.getConstraintName();
+            message = mapConstraintToMessage(constraint);
+        }
+
+        ApiError apiError = ApiError.builder()
+                .code(HttpStatus.BAD_REQUEST.value())
+                .status(HttpStatus.BAD_REQUEST)
+                .message(message)
+                .build();
+
+        return buildErrorResponse(apiError);
+    }
+
+    private static final Map<String, String> CONSTRAINT_MAP = Map.of(
+            "email_constraint", "Email already exists",
+            "email_linkedin_constraint", "Email + LinkedIn already exists"
+    );
+
+    private String mapConstraintToMessage(String constraint) {
+        return CONSTRAINT_MAP.getOrDefault(constraint, "Duplicate value");
     }
 
     @ExceptionHandler(Exception.class)

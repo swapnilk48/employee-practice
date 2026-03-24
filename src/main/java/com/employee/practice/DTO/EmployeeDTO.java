@@ -4,9 +4,12 @@ package com.employee.practice.DTO;
 import com.employee.practice.annotations.RoleValidationAnnotation;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.URL;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -48,4 +51,8 @@ public class EmployeeDTO {
     private String LinkedInURL;
 
     private Boolean active;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }

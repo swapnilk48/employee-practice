@@ -7,6 +7,7 @@ import lombok.*;
 import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -25,4 +26,8 @@ public class DepartmentDTO {
 
     @PastOrPresent(message = "Created date cannot be in future")
     private LocalDate createdDate;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }

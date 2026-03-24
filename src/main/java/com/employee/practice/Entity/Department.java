@@ -14,16 +14,28 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "department")
+@Table(
+        name = "department",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "dept_name", columnNames = {"deptName"})
+        },
+        indexes = {
+                @Index(name = "dept_name_idx", columnList = "deptName")
+        }
+)
 public class Department {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String deptName;
 
     private Boolean active;
 
     private LocalDate createdDate;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }
